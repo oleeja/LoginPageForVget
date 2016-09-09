@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "469336206507",
+    "project_id": "loginpage-142908"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:469336206507:android:eba29edbb80de481",
+        "android_client_info": {
+          "package_name": "com.kitsyambochcka.loginpage"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "469336206507-fk2u92b7lnldgcbe63dl9nanm9gehhc9.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.kitsyambochcka.loginpage",
+            "certificate_hash": "A18901F5B3054E7D6926103DEC55501750CE040B"
+          }
+        },
+        {
+          "client_id": "469336206507-8qropc3vuu2hn6lcqu9vp9gepqojvb2r.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAPqiInjFUWh6iaJyb0jQcy7MYrOXreLX8"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 1
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
