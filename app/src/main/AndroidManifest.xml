@@ -11,7 +11,7 @@
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".MainActivity">
+        <activity android:name=".activities.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -27,6 +27,8 @@
             android:name="com.vk.sdk.VKServiceActivity"
             android:label="ServiceActivity"
             android:theme="@style/VK.Transparent" />
+        <activity android:name=".activities.FBActivity" />
+        <activity android:name=".activities.VKActivity" />
 
         <meta-data
             android:name="com.facebook.sdk.ApplicationId"
@@ -35,7 +37,8 @@
             android:name="io.fabric.ApiKey"
             android:value="b3ac5feaa58647be34dbeb2acfb51a59e00c504c" />
 
-        <activity android:name=".ProfileActivity"></activity>
+        <activity android:name=".activities.ProfileActivity" />
+        <activity android:name=".activities.GalleryActivity"></activity>
     </application>
 
 </manifest>
