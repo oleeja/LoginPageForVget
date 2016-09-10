@@ -29,6 +29,7 @@
             android:theme="@style/VK.Transparent" />
         <activity android:name=".activities.FBActivity" />
         <activity android:name=".activities.VKActivity" />
+        <activity android:name=".activities.GPlusActivity" />
 
         <meta-data
             android:name="com.facebook.sdk.ApplicationId"

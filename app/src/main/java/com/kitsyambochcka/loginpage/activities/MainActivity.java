@@ -2,6 +2,7 @@ package com.kitsyambochcka.loginpage.activities;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageButton;
@@ -12,6 +13,11 @@ import com.facebook.FacebookException;
 import com.facebook.login.LoginManager;
 import com.facebook.login.LoginResult;
 import com.facebook.login.widget.LoginButton;
+import com.google.android.gms.auth.api.Auth;
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.SignInButton;
+import com.google.android.gms.common.api.GoogleApiClient;
 import com.kitsyambochcka.loginpage.Constants;
 import com.kitsyambochcka.loginpage.R;
 import com.vk.sdk.VKAccessToken;
@@ -25,12 +31,15 @@ import java.util.Arrays;
 import butterknife.BindView;
 
 
-public class MainActivity extends BaseActivity {
+public class MainActivity extends BaseActivity implements GoogleApiClient.OnConnectionFailedListener{
 
     @BindView(R.id.sign_in_facebook)LoginButton facebookLoginButton;
     @BindView(R.id.sign_in_vk) ImageButton vkLoginButton;
+    @BindView(R.id.sign_in_google)SignInButton gPlusLoginButton;
     private CallbackManager callbackManager;
     private String[] scope = new String[]{VKScope.PHOTOS, VKScope.EMAIL};
+    private static final int RC_SIGN_IN = 1234;
+    private GoogleApiClient mGoogleApiClient;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -72,6 +81,22 @@ public class MainActivity extends BaseActivity {
         });
 
 
+        GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+                .requestEmail()
+                .build();
+
+        mGoogleApiClient = new GoogleApiClient.Builder(this)
+                .enableAutoManage(this /* FragmentActivity */, this /* OnConnectionFailedListener */)
+                .addApi(Auth.GOOGLE_SIGN_IN_API, gso)
+                .build();
+
+        gPlusLoginButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent signInIntent = Auth.GoogleSignInApi.getSignInIntent(mGoogleApiClient);
+                startActivityForResult(signInIntent, RC_SIGN_IN);
+            }
+        });
     }
 
 
@@ -98,6 +123,16 @@ public class MainActivity extends BaseActivity {
         callbackManager.onActivityResult(requestCode, resultCode, data);
 
 
+        if (requestCode == RC_SIGN_IN) {
+            data.setClass(this, GPlusActivity.class);
+            startActivity(data);
+        }
+
+    }
+
+
+    @Override
+    public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
 
     }
 }
