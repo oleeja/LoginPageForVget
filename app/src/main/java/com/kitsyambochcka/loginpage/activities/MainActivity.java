@@ -53,31 +53,38 @@ public class MainActivity extends BaseActivity implements GoogleApiClient.OnConn
         super.onCreate(savedInstanceState);
 
         callbackManager = CallbackManager.Factory.create();
-        LoginManager.getInstance().logInWithReadPermissions(this, Arrays.asList("public_profile"));
+        //LoginManager.getInstance().logInWithReadPermissions(this, Arrays.asList("public_profile"));
 
         facebookLoginButton.setReadPermissions(Arrays.asList(
                 "public_profile", "email", "user_birthday", "user_friends"));
 
-        facebookLoginButton.registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
 
+        facebookLoginButton.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onSuccess(final LoginResult loginResult) {
-                Intent intent = new Intent(MainActivity.this, FBActivity.class);
-                intent.putExtra(Constants.ACCESS_TOCKEN, loginResult.getAccessToken());
-                startActivity(intent);
+            public void onClick(View view) {
+                facebookLoginButton.registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
 
-            }
+                    @Override
+                    public void onSuccess(final LoginResult loginResult) {
+                        Intent intent = new Intent(MainActivity.this, FBActivity.class);
+                        intent.putExtra(Constants.ACCESS_TOCKEN, loginResult.getAccessToken());
+                        startActivity(intent);
 
-            @Override
-            public void onCancel() {
+                    }
 
-            }
+                    @Override
+                    public void onCancel() {
 
-            @Override
-            public void onError(FacebookException error) {
+                    }
 
+                    @Override
+                    public void onError(FacebookException error) {
+
+                    }
+                });
             }
         });
+
 
         vkLoginButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -92,7 +99,7 @@ public class MainActivity extends BaseActivity implements GoogleApiClient.OnConn
                 .build();
 
         mGoogleApiClient = new GoogleApiClient.Builder(this)
-                .enableAutoManage(this /* FragmentActivity */, this /* OnConnectionFailedListener */)
+                .enableAutoManage(this, this)
                 .addApi(Auth.GOOGLE_SIGN_IN_API, gso)
                 .build();
 

@@ -44,6 +44,7 @@ public class GPlusActivity extends ProfileActivity implements GoogleApiClient.On
         final GoogleSignInAccount acct = result.getSignInAccount();
 
 
+        showProgressDialog();
         Plus.PeopleApi.load(mGoogleApiClient, acct.getId()).setResultCallback(new ResultCallback<People.LoadPeopleResult>() {
             @Override
             public void onResult(@NonNull People.LoadPeopleResult loadPeopleResult) {
@@ -54,6 +55,7 @@ public class GPlusActivity extends ProfileActivity implements GoogleApiClient.On
                     Picasso.with(GPlusActivity.this)
                             .load(acct.getPhotoUrl())
                             .into(ivProfileImage);
+                    hideProgressDialog();
 
                 }
             }
@@ -64,6 +66,6 @@ public class GPlusActivity extends ProfileActivity implements GoogleApiClient.On
 
     @Override
     public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
-
+        hideProgressDialog();
     }
 }

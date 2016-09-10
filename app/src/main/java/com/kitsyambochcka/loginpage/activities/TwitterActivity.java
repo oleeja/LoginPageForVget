@@ -30,6 +30,8 @@ public class TwitterActivity extends ProfileActivity {
 
          session = Twitter.getSessionManager().getActiveSession();
 
+        showProgressDialog();
+
         Twitter.getApiClient(session).getAccountService()
                 .verifyCredentials(true, false).enqueue(new Callback<User>() {
 
@@ -63,12 +65,14 @@ public class TwitterActivity extends ProfileActivity {
             public void success(Result<String> stringResult) {
 
                 tvEmail.setText(stringResult.data);
+                hideProgressDialog();
 
             }
 
             @Override
             public void failure(TwitterException e) {
 
+                hideProgressDialog();
                 Log.d("MyTag", e.toString());
             }
         });

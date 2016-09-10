@@ -1,6 +1,7 @@
 package com.kitsyambochcka.loginpage.activities;
 
 import android.os.Bundle;
+import android.support.v4.view.ViewPager;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -16,7 +17,7 @@ public class ProfileActivity extends BaseActivity {
     @BindView(R.id.textViewName)TextView tvName;
     @BindView(R.id.textViewEmail)TextView tvEmail;
     @BindView(R.id.textViewDateOfBirthday)TextView tvDateOfBirthday;
-    @BindView(R.id.buttonGallery)Button bGoToGallery;
+    @BindView(R.id.pagerGallery)ViewPager vpGallery;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

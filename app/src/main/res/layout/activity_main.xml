@@ -7,34 +7,44 @@
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
+    android:background="@drawable/background"
     tools:context=".activities.MainActivity">
 
-    <com.google.android.gms.common.SignInButton
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/sign_in_google"
-        android:layout_gravity="center_horizontal"
-        android:layout_marginTop="30dp"
-        android:layout_marginBottom="30dp"/>
-
-    <com.facebook.login.widget.LoginButton
-        android:id="@+id/sign_in_facebook"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/sign_in_google"
-        android:layout_marginBottom="30dp"/>
 
     <ImageButton
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="@dimen/main_button_width"
+        android:layout_height="@dimen/main_button_height"
         android:id="@+id/sign_in_vk"
-        android:layout_below="@id/sign_in_facebook"
         android:background="@drawable/vk_button"
-        android:layout_marginBottom="30dp"/>
+        android:layout_centerVertical="true"
+        android:layout_centerHorizontal="true"
+
+        android:layout_margin="@dimen/activity_horizontal_margin"/>
 
     <com.twitter.sdk.android.core.identity.TwitterLoginButton
         android:id="@+id/sign_in_twitter"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/sign_in_vk" />
+        android:layout_width="@dimen/main_button_width"
+        android:layout_height="@dimen/main_button_height"
+        android:layout_below="@id/sign_in_vk"
+        android:layout_centerHorizontal="true"
+        android:layout_margin="@dimen/activity_horizontal_margin"/>
+
+    <com.facebook.login.widget.LoginButton
+        android:id="@+id/sign_in_facebook"
+        android:layout_width="@dimen/main_button_width"
+        android:layout_height="@dimen/main_button_height"
+        android:layout_above="@id/sign_in_vk"
+        android:layout_centerHorizontal="true"
+        android:layout_margin="@dimen/activity_horizontal_margin"/>
+
+    <com.google.android.gms.common.SignInButton
+        android:layout_width="@dimen/main_button_width"
+        android:layout_height="@dimen/main_button_height"
+        android:id="@+id/sign_in_google"
+        android:layout_centerHorizontal="true"
+        android:layout_above="@id/sign_in_facebook"
+        android:layout_margin="@dimen/activity_horizontal_margin"
+        />
+
+
 </RelativeLayout>

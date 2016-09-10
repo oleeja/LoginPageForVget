@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 
+import com.kitsyambochcka.loginpage.ImagePagerAdapter;
 import com.squareup.picasso.Picasso;
 import com.vk.sdk.VKAccessToken;
 import com.vk.sdk.api.VKApi;
@@ -14,9 +15,13 @@ import com.vk.sdk.api.VKError;
 import com.vk.sdk.api.VKParameters;
 import com.vk.sdk.api.VKRequest;
 import com.vk.sdk.api.VKResponse;
+import com.vk.sdk.api.model.VKApiPhoto;
+import com.vk.sdk.api.model.VKPhotoArray;
 
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import java.util.ArrayList;
 
 /**
  * Created by Developer on 09.09.2016.
@@ -26,12 +31,12 @@ public class VKActivity extends ProfileActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        bGoToGallery.setVisibility(View.VISIBLE);
+        vpGallery.setVisibility(View.VISIBLE);
         final String email = VKAccessToken.currentToken().email;
 
         VKRequest currentRequest = VKApi.users().get(VKParameters.from(VKApiConst.FIELDS, "photo_max_orig,first_name,last_name,bdate"));
 
-        showProgressDialog();
+
         currentRequest.executeWithListener(new VKRequest.VKRequestListener() {
             @Override
             public void onComplete(VKResponse response) {
@@ -49,7 +54,7 @@ public class VKActivity extends ProfileActivity {
                     Picasso.with(VKActivity.this)
                             .load(Uri.parse(userInfo.getString("photo_max_orig")))
                             .into(ivProfileImage);
-                    hideProgressDialog();
+
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
@@ -76,11 +81,24 @@ public class VKActivity extends ProfileActivity {
             }
         });
 
-        bGoToGallery.setOnClickListener(new View.OnClickListener() {
+        final ArrayList<String> uriPhoto = new ArrayList<>();
+        VKRequest requestPhoto = new VKRequest("photos.getAll", VKParameters.from(VKApiConst.OWNER_ID,
+                VKAccessToken.currentToken().userId, "count", 50), VKPhotoArray.class);
+        requestPhoto.executeWithListener(new VKRequest.VKRequestListener() {
             @Override
-            public void onClick(View view) {
-                startActivity(new Intent(VKActivity.this, GalleryActivity.class));
+            public void onComplete(VKResponse response) {
+                super.onComplete(response);
+
+                VKPhotoArray avataraArray = (VKPhotoArray) response.parsedModel;
+
+                for (VKApiPhoto avatarkaFull : avataraArray) {
+
+                    uriPhoto.add(avatarkaFull.photo_604);
+                    Log.d("MyTag", avatarkaFull.photo_604);
+                }
+                vpGallery.getAdapter().notifyDataSetChanged();
             }
         });
+        vpGallery.setAdapter(new ImagePagerAdapter(uriPhoto));
     }
 }

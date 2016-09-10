@@ -1,5 +1,8 @@
 <resources>
     <string name="app_name">LoginPage</string>
     <string name="facebook_app_id">291149571256888</string>
+    <string name="name">Name:</string>
+    <string name="e_mail">E-mail:</string>
+    <string name="date_of_birthday">Date Of Birthday:</string>
     <integer name="com_vk_sdk_AppId">5619909</integer>
 </resources>
