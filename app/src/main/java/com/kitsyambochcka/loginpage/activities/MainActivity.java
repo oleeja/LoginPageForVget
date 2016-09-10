@@ -20,6 +20,11 @@ import com.google.android.gms.common.SignInButton;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.kitsyambochcka.loginpage.Constants;
 import com.kitsyambochcka.loginpage.R;
+import com.twitter.sdk.android.core.Callback;
+import com.twitter.sdk.android.core.Result;
+import com.twitter.sdk.android.core.TwitterException;
+import com.twitter.sdk.android.core.TwitterSession;
+import com.twitter.sdk.android.core.identity.TwitterLoginButton;
 import com.vk.sdk.VKAccessToken;
 import com.vk.sdk.VKCallback;
 import com.vk.sdk.VKScope;
@@ -36,6 +41,7 @@ public class MainActivity extends BaseActivity implements GoogleApiClient.OnConn
     @BindView(R.id.sign_in_facebook)LoginButton facebookLoginButton;
     @BindView(R.id.sign_in_vk) ImageButton vkLoginButton;
     @BindView(R.id.sign_in_google)SignInButton gPlusLoginButton;
+    @BindView(R.id.sign_in_twitter)TwitterLoginButton twitterLoginButton;
     private CallbackManager callbackManager;
     private String[] scope = new String[]{VKScope.PHOTOS, VKScope.EMAIL};
     private static final int RC_SIGN_IN = 1234;
@@ -97,6 +103,21 @@ public class MainActivity extends BaseActivity implements GoogleApiClient.OnConn
                 startActivityForResult(signInIntent, RC_SIGN_IN);
             }
         });
+
+        twitterLoginButton.setCallback(new Callback<TwitterSession>() {
+            @Override
+            public void success(Result<TwitterSession> result) {
+                //If login succeeds passing the Calling the login method and passing Result object
+                startActivity(new Intent(MainActivity.this, TwitterActivity.class));
+
+            }
+
+            @Override
+            public void failure(TwitterException exception) {
+                //If failure occurs while login handle it here
+                Log.d("TwitterKit", "Login with Twitter failure", exception);
+            }
+        });
     }
 
 
@@ -121,6 +142,7 @@ public class MainActivity extends BaseActivity implements GoogleApiClient.OnConn
 
         super.onActivityResult(requestCode, resultCode, data);
         callbackManager.onActivityResult(requestCode, resultCode, data);
+        twitterLoginButton.onActivityResult(requestCode, resultCode, data);
 
 
         if (requestCode == RC_SIGN_IN) {

@@ -30,6 +30,7 @@
         <activity android:name=".activities.FBActivity" />
         <activity android:name=".activities.VKActivity" />
         <activity android:name=".activities.GPlusActivity" />
+        <activity android:name=".activities.TwitterActivity" />
 
         <meta-data
             android:name="com.facebook.sdk.ApplicationId"
