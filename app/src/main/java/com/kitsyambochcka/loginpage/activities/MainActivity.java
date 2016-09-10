@@ -3,6 +3,7 @@ package com.kitsyambochcka.loginpage.activities;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageButton;
 
@@ -16,6 +17,7 @@ import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.SignInButton;
 import com.google.android.gms.common.api.GoogleApiClient;
+import com.kitsyambochcka.loginpage.App;
 import com.kitsyambochcka.loginpage.Constants;
 import com.kitsyambochcka.loginpage.R;
 import com.twitter.sdk.android.core.Callback;
@@ -47,6 +49,13 @@ public class MainActivity extends BaseActivity implements GoogleApiClient.OnConn
     protected void onCreate(Bundle savedInstanceState) {
         setContentView(R.layout.activity_main);
         super.onCreate(savedInstanceState);
+
+
+            Log.d("MyTag", App.getDataManager().getGPlusAccount().getLinkPhoto());
+            Log.d("MyTag", App.getDataManager().getFBAccount().getLinkPhoto());
+            Log.d("MyTag", App.getDataManager().getVKAccount().getLinkPhoto());
+            Log.d("MyTag", App.getDataManager().getTwitterAccount().getLinkPhoto());
+
 
         callbackManager = CallbackManager.Factory.create();
 

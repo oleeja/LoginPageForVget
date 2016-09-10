@@ -13,6 +13,7 @@ import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.ResultCallback;
 import com.google.android.gms.plus.People;
 import com.google.android.gms.plus.Plus;
+import com.kitsyambochcka.loginpage.App;
 import com.kitsyambochcka.loginpage.Constants;
 import com.kitsyambochcka.loginpage.interfaces.UserPresenter;
 import com.kitsyambochcka.loginpage.models.User;
@@ -52,6 +53,9 @@ public class UserBuilder {
                     mainUser.setDateOfBirthday(loadPeopleResult.getPersonBuffer().get(0).getBirthday());
                     mainUser.setLinkPhoto(acct.getPhotoUrl().toString());
 
+                    mainUser.setSocialNetwork(Constants.GPlus);
+                    App.getDataManager().setAccount(mainUser);
+
                     userPresenter = (UserPresenter)context;
                     userPresenter.showUserInfo(mainUser);
                 }
@@ -77,6 +81,9 @@ public class UserBuilder {
                             mainUser.setEmail(email);
                             mainUser.setDateOfBirthday(birthday);
                             mainUser.setLinkPhoto(Profile.getCurrentProfile().getProfilePictureUri(width, height).toString());
+
+                            mainUser.setSocialNetwork(Constants.FACEBOOK);
+                            App.getDataManager().setAccount(mainUser);
 
                             userPresenter = (UserPresenter)context;
                             userPresenter.showUserInfo(mainUser);
@@ -113,6 +120,9 @@ public class UserBuilder {
                     mainUser.setEmail(email);
                     mainUser.setDateOfBirthday(userInfo.getString(Constants.VK_BIRTHDATE));
                     mainUser.setLinkPhoto(userInfo.getString(Constants.VK_PHOTO_MAX));
+
+                    mainUser.setSocialNetwork(Constants.VK);
+                    App.getDataManager().setAccount(mainUser);
 
                     userPresenter = (UserPresenter)context;
                     userPresenter.showUserInfo(mainUser);
@@ -170,21 +180,25 @@ public class UserBuilder {
                 authClient.requestEmail(session, new Callback<String>() {
                     @Override
                     public void success(Result<String> stringResult) {
-                        mainUser.setEmail(stringResult.data);
-                        userPresenter = (UserPresenter)context;
-                        userPresenter.showUserInfo(mainUser);
+                        showTwitterInfo(stringResult.data, context);
                     }
 
                     @Override
                     public void failure(TwitterException e) {
-                        mainUser.setEmail(Constants.EMPTY_STRING);
-                        userPresenter = (UserPresenter)context;
-                        userPresenter.showUserInfo(mainUser);
+                        showTwitterInfo(Constants.EMPTY_STRING, context);
                     }
                 });
 
             }
         });
+    }
+
+    public static void showTwitterInfo(String email, Context context){
+        mainUser.setSocialNetwork(Constants.TWITTER);
+        App.getDataManager().setAccount(mainUser);
+        mainUser.setEmail(email);
+        userPresenter = (UserPresenter)context;
+        userPresenter.showUserInfo(mainUser);
     }
 
 }

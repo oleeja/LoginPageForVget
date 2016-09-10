@@ -1,13 +1,29 @@
 package com.kitsyambochcka.loginpage.models;
 
+import io.realm.RealmObject;
+import io.realm.annotations.PrimaryKey;
+
 /**
  * Created by Developer on 10.09.2016.
  */
-public class User {
+public class User extends RealmObject{
+
+
+    @PrimaryKey
+    private String socialNetwork;
+
     private String linkPhoto;
     private String name;
     private String email;
     private String dateOfBirthday;
+
+    public String getSocialNetwork() {
+        return socialNetwork;
+    }
+
+    public void setSocialNetwork(String socialNetwork) {
+        this.socialNetwork = socialNetwork;
+    }
 
     public String getLinkPhoto() {
         return linkPhoto;

@@ -61,5 +61,6 @@ public class GPlusActivity extends ProfileActivity implements GoogleApiClient.On
                 .load(Uri.parse(user.getLinkPhoto()))
                 .into(ivProfileImage);
         hideProgressDialog();
+
     }
 }

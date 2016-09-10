@@ -38,7 +38,6 @@ public class FBActivity extends ProfileActivity implements UserPresenter {
                 .load(Uri.parse(user.getLinkPhoto()))
                 .into(ivProfileImage);
 
-
     }
 
     @Override

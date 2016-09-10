@@ -22,8 +22,17 @@ public class Constants {
     public static final String VK_PARAMETERS = VK_PHOTO_MAX+","+FIRST_NAME+","+LAST_NAME+","+VK_BIRTHDATE;
     public static final String EMPTY_STRING = "";
     public static final String TWITTER_NORMAL = "_normal";
+    public static final String GPlus = "gplus";
+    public static final String TWITTER = "twitter";
+    public static final String FACEBOOK = "facebook";
+    public static final String VK = "vk";
+    public static final String SOCIAL_NETWORKS = "socialNetwork";
 
     public static List<String> fbPermissions(){
         return Arrays.asList("public_profile", "email", "user_birthday", "user_friends");
+    }
+
+    public class Realm {
+        public static final String STORAGE_MAIN = "MainStorage.realm";
     }
 }
