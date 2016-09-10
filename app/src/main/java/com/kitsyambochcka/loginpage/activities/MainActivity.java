@@ -3,14 +3,12 @@ package com.kitsyambochcka.loginpage.activities;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.util.Log;
 import android.view.View;
 import android.widget.ImageButton;
 
 import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
 import com.facebook.FacebookException;
-import com.facebook.login.LoginManager;
 import com.facebook.login.LoginResult;
 import com.facebook.login.widget.LoginButton;
 import com.google.android.gms.auth.api.Auth;
@@ -30,8 +28,6 @@ import com.vk.sdk.VKCallback;
 import com.vk.sdk.VKScope;
 import com.vk.sdk.VKSdk;
 import com.vk.sdk.api.VKError;
-
-import java.util.Arrays;
 
 import butterknife.BindView;
 
@@ -53,11 +49,8 @@ public class MainActivity extends BaseActivity implements GoogleApiClient.OnConn
         super.onCreate(savedInstanceState);
 
         callbackManager = CallbackManager.Factory.create();
-        //LoginManager.getInstance().logInWithReadPermissions(this, Arrays.asList("public_profile"));
 
-        facebookLoginButton.setReadPermissions(Arrays.asList(
-                "public_profile", "email", "user_birthday", "user_friends"));
-
+        facebookLoginButton.setReadPermissions(Constants.fbPermissions());
 
         facebookLoginButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -66,20 +59,18 @@ public class MainActivity extends BaseActivity implements GoogleApiClient.OnConn
 
                     @Override
                     public void onSuccess(final LoginResult loginResult) {
-                        Intent intent = new Intent(MainActivity.this, FBActivity.class);
-                        intent.putExtra(Constants.ACCESS_TOCKEN, loginResult.getAccessToken());
-                        startActivity(intent);
+                        startActivity(new Intent(MainActivity.this, FBActivity.class));
 
                     }
 
                     @Override
                     public void onCancel() {
-
+                        //TODO: handle cancel occurs while login
                     }
 
                     @Override
                     public void onError(FacebookException error) {
-
+                        //TODO: handle failure occurs while login
                     }
                 });
             }
@@ -114,15 +105,14 @@ public class MainActivity extends BaseActivity implements GoogleApiClient.OnConn
         twitterLoginButton.setCallback(new Callback<TwitterSession>() {
             @Override
             public void success(Result<TwitterSession> result) {
-                //If login succeeds passing the Calling the login method and passing Result object
                 startActivity(new Intent(MainActivity.this, TwitterActivity.class));
 
             }
 
             @Override
             public void failure(TwitterException exception) {
-                //If failure occurs while login handle it here
-                Log.d("TwitterKit", "Login with Twitter failure", exception);
+                //TODO: handle failure occurs while login
+
             }
         });
     }
@@ -135,15 +125,13 @@ public class MainActivity extends BaseActivity implements GoogleApiClient.OnConn
             @Override
             public void onResult(VKAccessToken res) {
 
-                Intent intent = new Intent(MainActivity.this, VKActivity.class);
-                intent.putExtra(Constants.ACCESS_TOCKEN, res.accessToken);
-                startActivity(intent);
-                Log.d("MyTag", res.email);
-                Log.d("MyTag", res.userId);
+
+                startActivity(new Intent(MainActivity.this, VKActivity.class));
             }
 
             @Override
             public void onError(VKError error) {
+                //TODO: handle failure occurs while login
             }
         }));
 
@@ -164,4 +152,6 @@ public class MainActivity extends BaseActivity implements GoogleApiClient.OnConn
     public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
 
     }
+
+
 }

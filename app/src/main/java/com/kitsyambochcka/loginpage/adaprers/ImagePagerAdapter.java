@@ -1,16 +1,15 @@
-package com.kitsyambochcka.loginpage;
+package com.kitsyambochcka.loginpage.adaprers;
 
-import android.net.Uri;
 import android.support.v4.view.PagerAdapter;
 import android.view.View;
 import android.view.ViewGroup;
-
-import uk.co.senab.photoview.PhotoView;
 import android.view.ViewGroup.LayoutParams;
 
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
+
+import uk.co.senab.photoview.PhotoView;
 
 /**
  * Created by Developer on 10.09.2016.

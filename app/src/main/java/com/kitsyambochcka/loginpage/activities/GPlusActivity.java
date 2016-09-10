@@ -3,8 +3,6 @@ package com.kitsyambochcka.loginpage.activities;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 
 import com.google.android.gms.auth.api.Auth;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
@@ -12,18 +10,17 @@ import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.auth.api.signin.GoogleSignInResult;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
-import com.google.android.gms.common.api.ResultCallback;
-import com.google.android.gms.plus.People;
 import com.google.android.gms.plus.Plus;
+import com.kitsyambochcka.loginpage.interfaces.UserPresenter;
+import com.kitsyambochcka.loginpage.models.User;
+import com.kitsyambochcka.loginpage.utills.UserBuilder;
 import com.squareup.picasso.Picasso;
 
 /**
  * Created by Developer on 10.09.2016.
  */
-public class GPlusActivity extends ProfileActivity implements GoogleApiClient.OnConnectionFailedListener  {
+public class GPlusActivity extends ProfileActivity implements GoogleApiClient.OnConnectionFailedListener,UserPresenter {
 
-
-    private GoogleApiClient mGoogleApiClient;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,7 +31,7 @@ public class GPlusActivity extends ProfileActivity implements GoogleApiClient.On
                 .requestEmail()
                 .build();
 
-        mGoogleApiClient = new GoogleApiClient.Builder(this)
+        GoogleApiClient mGoogleApiClient = new GoogleApiClient.Builder(this)
                 .enableAutoManage(this, this)
                 .addApi(Auth.GOOGLE_SIGN_IN_API, gso)
                 .addApi(Plus.API)
@@ -43,29 +40,26 @@ public class GPlusActivity extends ProfileActivity implements GoogleApiClient.On
         GoogleSignInResult result = Auth.GoogleSignInApi.getSignInResultFromIntent(getIntent());
         final GoogleSignInAccount acct = result.getSignInAccount();
 
-
         showProgressDialog();
-        Plus.PeopleApi.load(mGoogleApiClient, acct.getId()).setResultCallback(new ResultCallback<People.LoadPeopleResult>() {
-            @Override
-            public void onResult(@NonNull People.LoadPeopleResult loadPeopleResult) {
-                if (loadPeopleResult.getStatus().isSuccess()) {
-                    tvName.setText(acct.getDisplayName());
-                    tvEmail.setText(acct.getEmail());
-                    tvDateOfBirthday.setText(loadPeopleResult.getPersonBuffer().get(0).getBirthday());
-                    Picasso.with(GPlusActivity.this)
-                            .load(acct.getPhotoUrl())
-                            .into(ivProfileImage);
-                    hideProgressDialog();
 
-                }
-            }
-        });
+        UserBuilder.createGPlusUser(this, mGoogleApiClient,acct);
 
     }
 
 
     @Override
     public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
+        hideProgressDialog();
+    }
+
+    @Override
+    public void showUserInfo(User user) {
+        tvName.setText(user.getName());
+        tvEmail.setText(user.getEmail());
+        tvDateOfBirthday.setText(user.getDateOfBirthday());
+        Picasso.with(GPlusActivity.this)
+                .load(Uri.parse(user.getLinkPhoto()))
+                .into(ivProfileImage);
         hideProgressDialog();
     }
 }

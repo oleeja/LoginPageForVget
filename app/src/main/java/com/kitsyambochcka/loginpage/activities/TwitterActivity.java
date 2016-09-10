@@ -1,81 +1,33 @@
 package com.kitsyambochcka.loginpage.activities;
 
-import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-import android.util.Log;
 
+import com.kitsyambochcka.loginpage.interfaces.UserPresenter;
+import com.kitsyambochcka.loginpage.models.User;
+import com.kitsyambochcka.loginpage.utills.UserBuilder;
 import com.squareup.picasso.Picasso;
-import com.twitter.sdk.android.Twitter;
-import com.twitter.sdk.android.core.Callback;
-import com.twitter.sdk.android.core.Result;
-import com.twitter.sdk.android.core.TwitterException;
-import com.twitter.sdk.android.core.TwitterSession;
-import com.twitter.sdk.android.core.identity.TwitterAuthClient;
-import com.twitter.sdk.android.core.models.User;
+
 
 
 /**
  * Created by Developer on 10.09.2016.
  */
-public class TwitterActivity extends ProfileActivity {
-
-    private TwitterAuthClient authClient;
-    private TwitterSession session;
+public class TwitterActivity extends ProfileActivity implements UserPresenter {
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-         authClient = new TwitterAuthClient();
-
-         session = Twitter.getSessionManager().getActiveSession();
-
-        showProgressDialog();
-
-        Twitter.getApiClient(session).getAccountService()
-                .verifyCredentials(true, false).enqueue(new Callback<User>() {
-
-            @Override
-            public void failure(TwitterException e) {
-
-            }
-
-            @Override
-            public void success(Result<User> userResult) {
-                User user = userResult.data;
-
-                String profileImage = user.profileImageUrl.replace("_normal", "");
-                setEmail();
-
-                tvName.setText(user.name);
-                Picasso.with(TwitterActivity.this)
-                        .load(profileImage)
-                        .into(ivProfileImage);
-
-            }
-        });
-
-
+        UserBuilder.createTwitterUser(this);
     }
 
-    private void setEmail() {
-
-        authClient.requestEmail(session, new Callback<String>() {
-            @Override
-            public void success(Result<String> stringResult) {
-
-                tvEmail.setText(stringResult.data);
-                hideProgressDialog();
-
-            }
-
-            @Override
-            public void failure(TwitterException e) {
-
-                hideProgressDialog();
-                Log.d("MyTag", e.toString());
-            }
-        });
+    @Override
+    public void showUserInfo(User user) {
+        tvName.setText(user.getName());
+        tvEmail.setText(user.getEmail());
+        tvDateOfBirthday.setText(user.getDateOfBirthday());
+        Picasso.with(TwitterActivity.this)
+                .load(Uri.parse(user.getLinkPhoto()))
+                .into(ivProfileImage);
     }
-
 }

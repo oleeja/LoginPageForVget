@@ -1,58 +1,49 @@
 package com.kitsyambochcka.loginpage.activities;
 
+import android.net.Uri;
 import android.os.Bundle;
-import android.util.Log;
 
-import com.facebook.AccessToken;
-import com.facebook.GraphRequest;
-import com.facebook.GraphResponse;
-import com.facebook.Profile;
+import com.facebook.login.LoginManager;
+import com.kitsyambochcka.loginpage.interfaces.UserPresenter;
+import com.kitsyambochcka.loginpage.models.User;
+import com.kitsyambochcka.loginpage.utills.UserBuilder;
 import com.squareup.picasso.Picasso;
-
-import org.json.JSONException;
-import org.json.JSONObject;
 
 /**
  * Created by Developer on 09.09.2016.
  */
-public class FBActivity extends ProfileActivity {
-//    private ProfileTracker mProfileTracker;
+public class FBActivity extends ProfileActivity implements UserPresenter {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        showProgressDialog();
-        GraphRequest request = GraphRequest.newMeRequest(
-                AccessToken.getCurrentAccessToken(),
-                new GraphRequest.GraphJSONObjectCallback() {
-                    @Override
-                    public void onCompleted(JSONObject object, GraphResponse response) {
-                        Log.v("LoginActivity", response.toString());
+    }
 
-                        try {
-                            String email = object.getString("email");
-                            String birthday = object.getString("birthday"); // 01/31/1980 format
+    @Override
+    public void onWindowFocusChanged(boolean hasFocus) {
+        super.onWindowFocusChanged(hasFocus);
 
-                            tvEmail.setText(email);
-                            tvDateOfBirthday.setText(birthday);
+            UserBuilder.createFBUser(this, ivProfileImage.getWidth(), ivProfileImage.getHeight());
 
-                            tvName.setText(Profile.getCurrentProfile().getName());
-                            Picasso.with(FBActivity.this)
-                                    .load(Profile.getCurrentProfile().getProfilePictureUri(ivProfileImage.getWidth(), ivProfileImage.getHeight()))
-                                    .into(ivProfileImage);
+    }
 
-                            hideProgressDialog();
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                        }
+    @Override
+    public void showUserInfo(User user) {
+        tvEmail.setText(user.getEmail());
+        tvDateOfBirthday.setText(user.getDateOfBirthday());
 
-                    }
-                });
-        Bundle parameters = new Bundle();
-        parameters.putString("fields", "email,birthday");
-        request.setParameters(parameters);
-        request.executeAsync();
+        tvName.setText(user.getName());
+        Picasso.with(FBActivity.this)
+                .load(Uri.parse(user.getLinkPhoto()))
+                .into(ivProfileImage);
 
+
+    }
+
+    @Override
+    protected void onDestroy() {
+        LoginManager.getInstance().logOut();
+        super.onDestroy();
     }
 }
