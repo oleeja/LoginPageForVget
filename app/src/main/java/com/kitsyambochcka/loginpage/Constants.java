@@ -27,6 +27,7 @@ public class Constants {
     public static final String FACEBOOK = "facebook";
     public static final String VK = "vk";
     public static final String SOCIAL_NETWORKS = "socialNetwork";
+    public static final String GOOGLE_COM = "google.com";
 
     public static List<String> fbPermissions(){
         return Arrays.asList("public_profile", "email", "user_birthday", "user_friends");

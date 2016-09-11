@@ -67,4 +67,8 @@ public class DataManager implements Manager {
     public User getTwitterAccount(){
         return realm.where(User.class).equalTo(Constants.SOCIAL_NETWORKS, Constants.TWITTER).findFirst();
     }
+
+    public User getAccount(String network){
+        return realm.where(User.class).equalTo(Constants.SOCIAL_NETWORKS, network).findFirst();
+    }
 }

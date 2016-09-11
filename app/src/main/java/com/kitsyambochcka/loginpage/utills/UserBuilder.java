@@ -3,6 +3,7 @@ package com.kitsyambochcka.loginpage.utills;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.widget.Toast;
 
 import com.facebook.AccessToken;
 import com.facebook.GraphRequest;
@@ -31,7 +32,6 @@ import com.vk.sdk.api.VKParameters;
 import com.vk.sdk.api.VKRequest;
 import com.vk.sdk.api.VKResponse;
 
-import org.json.JSONException;
 import org.json.JSONObject;
 
 /**
@@ -44,23 +44,32 @@ public class UserBuilder {
 
     public static void createGPlusUser(final Context context, GoogleApiClient mGoogleApiClient, final GoogleSignInAccount acct){
         mainUser = new User();
-        Plus.PeopleApi.load(mGoogleApiClient, acct.getId()).setResultCallback(new ResultCallback<People.LoadPeopleResult>() {
-            @Override
-            public void onResult(@NonNull People.LoadPeopleResult loadPeopleResult) {
-                if (loadPeopleResult.getStatus().isSuccess()) {
-                    mainUser.setName(acct.getDisplayName());
-                    mainUser.setEmail(acct.getEmail());
-                    mainUser.setDateOfBirthday(loadPeopleResult.getPersonBuffer().get(0).getBirthday());
-                    mainUser.setLinkPhoto(acct.getPhotoUrl().toString());
+        if(acct!=null){
+            Plus.PeopleApi.load(mGoogleApiClient, acct.getId()).setResultCallback(new ResultCallback<People.LoadPeopleResult>() {
+                @Override
+                public void onResult(@NonNull People.LoadPeopleResult loadPeopleResult) {
+                    if (loadPeopleResult.getStatus().isSuccess()) {
+                        mainUser.setName(acct.getDisplayName());
+                        mainUser.setEmail(acct.getEmail());
+                        mainUser.setDateOfBirthday(loadPeopleResult.getPersonBuffer().get(0).getBirthday());
+                        mainUser.setLinkPhoto(acct.getPhotoUrl().toString());
 
-                    mainUser.setSocialNetwork(Constants.GPlus);
-                    App.getDataManager().setAccount(mainUser);
+                        mainUser.setSocialNetwork(Constants.GPlus);
+                        App.getDataManager().setAccount(mainUser);
 
-                    userPresenter = (UserPresenter)context;
-                    userPresenter.showUserInfo(mainUser);
+                        userPresenter = (UserPresenter)context;
+                        userPresenter.showUserInfo(mainUser);
+                    }
                 }
+            });
+        }else {
+            mainUser = App.getDataManager().getAccount(Constants.GPlus);
+            if(mainUser!=null){
+                showInfo(context,mainUser);
+            }else {
+                showToast(context);
             }
-        });
+        }
 
     }
 
@@ -88,8 +97,13 @@ public class UserBuilder {
                             userPresenter = (UserPresenter)context;
                             userPresenter.showUserInfo(mainUser);
 
-                        } catch (JSONException e) {
-                            e.printStackTrace();
+                        } catch (Exception e) {
+                            mainUser = App.getDataManager().getAccount(Constants.FACEBOOK);
+                            if(mainUser!=null){
+                                showInfo(context,mainUser);
+                            }else {
+                                showToast(context);
+                            }
                         }
 
                     }
@@ -103,7 +117,7 @@ public class UserBuilder {
     public static void createVKUser(final Context context){
 
         mainUser = new User();
-        final String email = VKAccessToken.currentToken().email;
+
         VKRequest currentRequest = VKApi.users().get(VKParameters.from(VKApiConst.FIELDS, Constants.VK_PARAMETERS));
 
 
@@ -113,6 +127,7 @@ public class UserBuilder {
                 super.onComplete(response);
 
                 try {
+                    final String email = VKAccessToken.currentToken().email;
                     JSONObject userInfo = response.json.getJSONArray(Constants.RESPONSE).getJSONObject(0);
                     String name = userInfo.getString(Constants.FIRST_NAME)+" "+userInfo.getString(Constants.LAST_NAME);
 
@@ -124,10 +139,9 @@ public class UserBuilder {
                     mainUser.setSocialNetwork(Constants.VK);
                     App.getDataManager().setAccount(mainUser);
 
-                    userPresenter = (UserPresenter)context;
-                    userPresenter.showUserInfo(mainUser);
+                    showInfo(context, mainUser);
 
-                } catch (JSONException e) {
+                } catch (Exception e) {
                     e.printStackTrace();
                 }
 
@@ -137,17 +151,30 @@ public class UserBuilder {
             @Override
             public void attemptFailed(VKRequest request, int attemptNumber, int totalAttempts) {
                 super.attemptFailed(request, attemptNumber, totalAttempts);
+                mainUser = App.getDataManager().getVKAccount();
+                if(mainUser!=null){
+                    showInfo(context,mainUser);
+                }else {
+                    showToast(context);
+                }
             }
 
             @Override
             public void onError(VKError error) {
                 super.onError(error);
+                mainUser = App.getDataManager().getVKAccount();
+                if(mainUser!=null){
+                    showInfo(context,mainUser);
+                }else {
+                    showToast(context);
+                }
             }
 
             @Override
             public void onProgress(VKRequest.VKProgressType progressType, long bytesLoaded, long bytesTotal) {
                 super.onProgress(progressType, bytesLoaded, bytesTotal);
             }
+
         });
     }
 
@@ -159,38 +186,53 @@ public class UserBuilder {
         authClient = new TwitterAuthClient();
         session = Twitter.getSessionManager().getActiveSession();
 
-        Twitter.getApiClient(session).getAccountService()
-                .verifyCredentials(true, false).enqueue(new Callback<com.twitter.sdk.android.core.models.User>() {
+        if(session!=null){
+            Twitter.getApiClient(session).getAccountService()
+                    .verifyCredentials(true, false).enqueue(new Callback<com.twitter.sdk.android.core.models.User>() {
 
-            @Override
-            public void failure(TwitterException e) {
-
-            }
-
-            @Override
-            public void success(Result<com.twitter.sdk.android.core.models.User> userResult) {
-                com.twitter.sdk.android.core.models.User user = userResult.data;
-
-                String profileImage = user.profileImageUrl.replace(Constants.TWITTER_NORMAL, Constants.EMPTY_STRING);
-
-                mainUser.setName(user.name);
-                mainUser.setDateOfBirthday(Constants.EMPTY_STRING);//Twitter api doesn't resolve to get date of birthday
-                mainUser.setLinkPhoto(profileImage);
-
-                authClient.requestEmail(session, new Callback<String>() {
-                    @Override
-                    public void success(Result<String> stringResult) {
-                        showTwitterInfo(stringResult.data, context);
+                @Override
+                public void failure(TwitterException e) {
+                    mainUser = App.getDataManager().getAccount(Constants.TWITTER);
+                    if(mainUser!=null){
+                        showInfo(context,mainUser);
+                    }else {
+                        showToast(context);
                     }
+                }
 
-                    @Override
-                    public void failure(TwitterException e) {
-                        showTwitterInfo(Constants.EMPTY_STRING, context);
-                    }
-                });
+                @Override
+                public void success(Result<com.twitter.sdk.android.core.models.User> userResult) {
+                    com.twitter.sdk.android.core.models.User user = userResult.data;
 
+                    String profileImage = user.profileImageUrl.replace(Constants.TWITTER_NORMAL, Constants.EMPTY_STRING);
+
+                    mainUser.setName(user.name);
+                    mainUser.setDateOfBirthday(Constants.EMPTY_STRING);//Twitter api doesn't resolve to get date of birthday
+                    mainUser.setLinkPhoto(profileImage);
+
+                    authClient.requestEmail(session, new Callback<String>() {
+                        @Override
+                        public void success(Result<String> stringResult) {
+                            showTwitterInfo(stringResult.data, context);
+                        }
+
+                        @Override
+                        public void failure(TwitterException e) {
+                            showTwitterInfo(Constants.EMPTY_STRING, context);
+                        }
+                    });
+
+                }
+            });
+        }else {
+            mainUser = App.getDataManager().getAccount(Constants.TWITTER);
+            if(mainUser!=null){
+                showInfo(context,mainUser);
+            }else {
+                showToast(context);
             }
-        });
+        }
+
     }
 
     public static void showTwitterInfo(String email, Context context){
@@ -199,6 +241,17 @@ public class UserBuilder {
         mainUser.setEmail(email);
         userPresenter = (UserPresenter)context;
         userPresenter.showUserInfo(mainUser);
+    }
+
+
+
+    public static void showInfo(Context context, User showingUser){
+        userPresenter = (UserPresenter)context;
+        userPresenter.showUserInfo(showingUser);
+    }
+
+    public static void showToast(Context context) {
+        Toast.makeText(context, "Error: Interner connection", Toast.LENGTH_SHORT).show();
     }
 
 }

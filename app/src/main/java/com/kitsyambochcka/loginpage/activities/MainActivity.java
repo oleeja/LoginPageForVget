@@ -3,7 +3,6 @@ package com.kitsyambochcka.loginpage.activities;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.util.Log;
 import android.view.View;
 import android.widget.ImageButton;
 
@@ -17,7 +16,6 @@ import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.SignInButton;
 import com.google.android.gms.common.api.GoogleApiClient;
-import com.kitsyambochcka.loginpage.App;
 import com.kitsyambochcka.loginpage.Constants;
 import com.kitsyambochcka.loginpage.R;
 import com.twitter.sdk.android.core.Callback;
@@ -51,10 +49,10 @@ public class MainActivity extends BaseActivity implements GoogleApiClient.OnConn
         super.onCreate(savedInstanceState);
 
 
-            Log.d("MyTag", App.getDataManager().getGPlusAccount().getLinkPhoto());
-            Log.d("MyTag", App.getDataManager().getFBAccount().getLinkPhoto());
-            Log.d("MyTag", App.getDataManager().getVKAccount().getLinkPhoto());
-            Log.d("MyTag", App.getDataManager().getTwitterAccount().getLinkPhoto());
+//            Log.d("MyTag", App.getDataManager().getGPlusAccount().getLinkPhoto());
+//            Log.d("MyTag", App.getDataManager().getFBAccount().getLinkPhoto());
+//            Log.d("MyTag", App.getDataManager().getVKAccount().getLinkPhoto());
+//            Log.d("MyTag", App.getDataManager().getTwitterAccount().getLinkPhoto());
 
 
         callbackManager = CallbackManager.Factory.create();
@@ -79,7 +77,7 @@ public class MainActivity extends BaseActivity implements GoogleApiClient.OnConn
 
                     @Override
                     public void onError(FacebookException error) {
-                        //TODO: handle failure occurs while login
+                        startActivity(new Intent(MainActivity.this, FBActivity.class));
                     }
                 });
             }
@@ -120,7 +118,7 @@ public class MainActivity extends BaseActivity implements GoogleApiClient.OnConn
 
             @Override
             public void failure(TwitterException exception) {
-                //TODO: handle failure occurs while login
+                startActivity(new Intent(MainActivity.this, TwitterActivity.class));
 
             }
         });
@@ -140,6 +138,7 @@ public class MainActivity extends BaseActivity implements GoogleApiClient.OnConn
 
             @Override
             public void onError(VKError error) {
+                startActivity(new Intent(MainActivity.this, VKActivity.class));
                 //TODO: handle failure occurs while login
             }
         }));

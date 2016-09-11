@@ -2,12 +2,10 @@ package com.kitsyambochcka.loginpage.activities;
 
 import android.os.Bundle;
 import android.support.v4.view.ViewPager;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.kitsyambochcka.loginpage.R;
-import com.kitsyambochcka.loginpage.activities.BaseActivity;
 
 import butterknife.BindView;
 
@@ -23,6 +21,9 @@ public class ProfileActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         setContentView(R.layout.activity_profile);
         super.onCreate(savedInstanceState);
-
     }
+
+
+
+
 }
