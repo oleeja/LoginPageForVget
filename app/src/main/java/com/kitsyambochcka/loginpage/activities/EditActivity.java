@@ -18,6 +18,7 @@ import org.json.JSONException;
 
 import butterknife.BindView;
 
+
 public class EditActivity extends BaseActivity {
 
     @BindView(R.id.editTextFirstNam)EditText etFirstName;
@@ -40,6 +41,8 @@ public class EditActivity extends BaseActivity {
         etEmail.setText(user.getEmail());
         etBirthday.setText(user.getDateOfBirthday());
         setViews(network);
+
+
 
         bSave.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -80,6 +83,13 @@ public class EditActivity extends BaseActivity {
                 etEmail.setEnabled(false);
                 etBirthday.setEnabled(false);
                 break;
+            case Constants.TWITTER:
+                //TODO:delete fields if it will be needed - Twitter
+                etFirstName.setEnabled(false);
+                etLastName.setEnabled(false);
+                etEmail.setEnabled(false);
+                etBirthday.setEnabled(false);
+                break;
         }
     }
 
@@ -93,6 +103,9 @@ public class EditActivity extends BaseActivity {
                 break;
             case Constants.GPlus:
                 //TODO:Edit G+ account if it possible
+                break;
+            case Constants.TWITTER:
+                //TODO:Edit TWITTER account if it possible
                 break;
         }
     }
@@ -119,11 +132,10 @@ public class EditActivity extends BaseActivity {
                 }finally {
                     onBackPressed();
                 }
-                
+
             }
         });
     }
-
 
 
     private boolean checkAllFields() {

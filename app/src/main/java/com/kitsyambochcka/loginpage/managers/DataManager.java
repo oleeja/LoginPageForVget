@@ -37,8 +37,6 @@ public class DataManager implements Manager {
         }
     }
 
-
-
     public void setAccount(User user) {
         try {
             realm.beginTransaction();
@@ -52,7 +50,6 @@ public class DataManager implements Manager {
     public List<User> getAllAccounts(){
         return realm.where(User.class).findAll();
     }
-
 
     public User getAccount(String network){
         return realm.where(User.class).equalTo(Constants.SOCIAL_NETWORKS, network).findFirst();

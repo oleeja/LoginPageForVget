@@ -34,7 +34,6 @@ public class ImagePagerAdapter extends PagerAdapter {
                 .load(uriPhoto.get(position))
                 .into(photoView);
 
-        // Now just add PhotoView to ViewPager and return it
         photoView.setAdjustViewBounds(true);
         container.addView(photoView, LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
 

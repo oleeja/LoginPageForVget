@@ -218,6 +218,7 @@ public class UserBuilder {
                     mainUser.setDateOfBirthday(Constants.EMPTY_STRING);//Twitter api doesn't resolve to get date of birthday
                     mainUser.setLinkPhoto(profileImage);
 
+
                     authClient.requestEmail(session, new Callback<String>() {
                         @Override
                         public void success(Result<String> stringResult) {

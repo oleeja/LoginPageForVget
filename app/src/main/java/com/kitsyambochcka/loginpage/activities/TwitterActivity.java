@@ -12,8 +12,6 @@ import com.kitsyambochcka.loginpage.models.User;
 import com.kitsyambochcka.loginpage.utills.UserBuilder;
 import com.squareup.picasso.Picasso;
 
-
-
 /**
  * Created by Developer on 10.09.2016.
  */

@@ -125,8 +125,6 @@ public class MainActivity extends BaseActivity implements GoogleApiClient.OnConn
         if (!VKSdk.onActivityResult(requestCode, resultCode, data, new VKCallback<VKAccessToken>() {
             @Override
             public void onResult(VKAccessToken res) {
-
-
                 startActivity(new Intent(MainActivity.this, VKActivity.class));
             }
 
