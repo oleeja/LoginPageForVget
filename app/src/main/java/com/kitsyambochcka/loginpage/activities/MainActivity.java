@@ -48,16 +48,10 @@ public class MainActivity extends BaseActivity implements GoogleApiClient.OnConn
         setContentView(R.layout.activity_main);
         super.onCreate(savedInstanceState);
 
-
-//            Log.d("MyTag", App.getDataManager().getGPlusAccount().getLinkPhoto());
-//            Log.d("MyTag", App.getDataManager().getFBAccount().getLinkPhoto());
-//            Log.d("MyTag", App.getDataManager().getVKAccount().getLinkPhoto());
-//            Log.d("MyTag", App.getDataManager().getTwitterAccount().getLinkPhoto());
-
-
         callbackManager = CallbackManager.Factory.create();
 
         facebookLoginButton.setReadPermissions(Constants.fbPermissions());
+
 
         facebookLoginButton.setOnClickListener(new View.OnClickListener() {
             @Override

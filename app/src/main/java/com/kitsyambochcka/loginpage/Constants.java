@@ -28,6 +28,11 @@ public class Constants {
     public static final String VK = "vk";
     public static final String SOCIAL_NETWORKS = "socialNetwork";
     public static final String GOOGLE_COM = "google.com";
+    public static final String CHECK_FIELDS = "Check all fields";
+    public static final String VK_SAVE_PROFILE = "account.saveProfileInfo";
+    public static final String VK_NAME_REQUEST = "name_request";
+    public static final String VK_LANG = "lang";
+    public static final String SUCCESSFUL = "Successful";
 
     public static List<String> fbPermissions(){
         return Arrays.asList("public_profile", "email", "user_birthday", "user_friends");
