@@ -59,8 +59,16 @@ public class UserBuilder {
 
                         userPresenter = (UserPresenter)context;
                         userPresenter.showUserInfo(mainUser);
+                    }else {
+                        mainUser = App.getDataManager().getAccount(Constants.GPlus);
+                        if(mainUser!=null){
+                            showInfo(context,mainUser);
+                        }else {
+                            showToast(context);
+                        }
                     }
                 }
+
             });
         }else {
             mainUser = App.getDataManager().getAccount(Constants.GPlus);
@@ -151,7 +159,7 @@ public class UserBuilder {
             @Override
             public void attemptFailed(VKRequest request, int attemptNumber, int totalAttempts) {
                 super.attemptFailed(request, attemptNumber, totalAttempts);
-                mainUser = App.getDataManager().getVKAccount();
+                mainUser = App.getDataManager().getAccount(Constants.VK);
                 if(mainUser!=null){
                     showInfo(context,mainUser);
                 }else {
@@ -162,7 +170,7 @@ public class UserBuilder {
             @Override
             public void onError(VKError error) {
                 super.onError(error);
-                mainUser = App.getDataManager().getVKAccount();
+                mainUser = App.getDataManager().getAccount(Constants.VK);
                 if(mainUser!=null){
                     showInfo(context,mainUser);
                 }else {

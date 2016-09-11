@@ -4,6 +4,7 @@ import android.content.Context;
 
 import com.kitsyambochcka.loginpage.Constants;
 import com.kitsyambochcka.loginpage.interfaces.Manager;
+import com.kitsyambochcka.loginpage.models.TimeSaver;
 import com.kitsyambochcka.loginpage.models.User;
 
 import java.util.List;
@@ -52,23 +53,40 @@ public class DataManager implements Manager {
         return realm.where(User.class).findAll();
     }
 
-    public User getGPlusAccount(){
-        return realm.where(User.class).equalTo(Constants.SOCIAL_NETWORKS, Constants.GPlus).findFirst();
-    }
-
-    public User getFBAccount(){
-        return realm.where(User.class).equalTo(Constants.SOCIAL_NETWORKS, Constants.FACEBOOK).findFirst();
-    }
-
-    public User getVKAccount(){
-        return realm.where(User.class).equalTo(Constants.SOCIAL_NETWORKS, Constants.VK).findFirst();
-    }
-
-    public User getTwitterAccount(){
-        return realm.where(User.class).equalTo(Constants.SOCIAL_NETWORKS, Constants.TWITTER).findFirst();
-    }
 
     public User getAccount(String network){
         return realm.where(User.class).equalTo(Constants.SOCIAL_NETWORKS, network).findFirst();
+    }
+
+    public void setTimeMarker(TimeSaver timeMarker) {
+        try {
+            realm.beginTransaction();
+            realm.copyToRealmOrUpdate(timeMarker);
+            realm.commitTransaction();
+        } catch (RealmException e) {
+            realm.cancelTransaction();
+        }
+    }
+
+    public TimeSaver getMarker(){
+        return realm.where(TimeSaver.class).findFirst();
+    }
+
+    public void clearDB() {
+        realm.executeTransaction(new Realm.Transaction() {
+            @Override
+            public void execute(Realm realm) {
+                realm.delete(User.class);
+            }
+        });
+    }
+
+    public void clearMarker() {
+        realm.executeTransaction(new Realm.Transaction() {
+            @Override
+            public void execute(Realm realm) {
+                realm.delete(TimeSaver.class);
+            }
+        });
     }
 }

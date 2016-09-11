@@ -40,7 +40,7 @@ public class GPlusActivity extends ProfileActivity implements GoogleApiClient.On
         GoogleSignInResult result = Auth.GoogleSignInApi.getSignInResultFromIntent(getIntent());
         final GoogleSignInAccount acct = result.getSignInAccount();
 
-        showProgressDialog();
+
 
         UserBuilder.createGPlusUser(this, mGoogleApiClient,acct);
 
@@ -49,7 +49,7 @@ public class GPlusActivity extends ProfileActivity implements GoogleApiClient.On
 
     @Override
     public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
-        hideProgressDialog();
+
     }
 
     @Override
@@ -60,7 +60,7 @@ public class GPlusActivity extends ProfileActivity implements GoogleApiClient.On
         Picasso.with(GPlusActivity.this)
                 .load(Uri.parse(user.getLinkPhoto()))
                 .into(ivProfileImage);
-        hideProgressDialog();
+
 
     }
 }

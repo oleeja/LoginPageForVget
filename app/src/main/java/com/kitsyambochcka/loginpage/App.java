@@ -8,6 +8,7 @@ import com.facebook.FacebookSdk;
 import com.facebook.appevents.AppEventsLogger;
 import com.kitsyambochcka.loginpage.activities.MainActivity;
 import com.kitsyambochcka.loginpage.managers.DataManager;
+import com.kitsyambochcka.loginpage.models.TimeSaver;
 import com.twitter.sdk.android.Twitter;
 import com.twitter.sdk.android.core.TwitterAuthConfig;
 import com.vk.sdk.VKAccessToken;
@@ -28,6 +29,7 @@ public class App extends Application {
     private static final String TWITTER_KEY = "spUu9K8i8XyCbO7RCOE0WIbQD";
     private static final String TWITTER_SECRET = "jUOlDN3Ezp0L4RGIJdgOCZIDpPkMmFH2AObDILSdZMvuqTGrnb";
 
+    private static final long CLEAR_DATABASE_PERIOD =259200000; // 3 days
 
     private static DataManager dataManager;
     private static Context context;
@@ -57,7 +59,11 @@ public class App extends Application {
 
         context = getApplicationContext();
         setupRealmDefaultInstance();
+
+        clearDataBaseIfNeeded();
     }
+
+
 
     public static DataManager getDataManager() {
         if (dataManager == null) {
@@ -75,5 +81,27 @@ public class App extends Application {
 
     public static Context getContext() {
         return context;
+    }
+
+    private void clearDataBaseIfNeeded() {
+        long currentTime = System.currentTimeMillis();
+        if(getDataManager().getMarker()!=null){
+
+            long timeMarker = getDataManager().getMarker().getSavedTime();
+
+            if(currentTime-timeMarker>CLEAR_DATABASE_PERIOD){
+                getDataManager().clearDB();
+                getDataManager().clearMarker();
+                TimeSaver timeSaver = new TimeSaver();
+                timeSaver.setSavedTime(currentTime);
+                getDataManager().setTimeMarker(timeSaver);
+            }
+        }else {
+            TimeSaver timeSaver = new TimeSaver();
+            timeSaver.setSavedTime(currentTime);
+            getDataManager().setTimeMarker(timeSaver);
+
+        }
+
     }
 }
